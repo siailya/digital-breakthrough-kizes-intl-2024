@@ -50,9 +50,7 @@ namespace kizessleep
                     formData.Add(fileContent, "file", Path.GetFileName(selectedFilePath));
 
                     var response = await client.PostAsync(txtServerUrl.Text, formData);
-                    Console.WriteLine(response);
                     var responseText = await response.Content.ReadAsStringAsync();
-
 
                     txtResponse.Text = responseText;
                 }

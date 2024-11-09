@@ -44,7 +44,13 @@ export default [
             "multiline": "always"
           }
         }
-      ]
+      ],
+      "vue/multiline-html-element-content-newline": ["error", {
+        "ignoreWhenEmpty": true,
+        "allowEmptyLines": false
+      }],
+      "vue/mustache-interpolation-spacing": ["error", "always"],
+      "@typescript-eslint/no-explicit-any": "off",
     },
   },
   {

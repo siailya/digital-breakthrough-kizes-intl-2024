@@ -4,6 +4,7 @@
     :locale="ruRU"
     :theme="appTheme"
     preflight-style-disabled
+    :theme-overrides="themeOverrides"
   >
     <transition
       mode="out-in"
@@ -31,6 +32,7 @@
 import { type Component as VueComponent, computed } from 'vue';
 import { useRoute } from 'vue-router';
 import { darkTheme, dateRuRU, lightTheme, ruRU } from 'naive-ui';
+import themeOverrides from "@app/style/naive-ui-theme-overrides.json";
 
 import EmptyLayout from '@shared/ui/layout/TheEmptyLayout.vue';
 import { useRootStore } from '@shared/model/store/useRootStore';

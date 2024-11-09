@@ -10,7 +10,10 @@ export const routes: RouteRecordRaw[] = [
     }
   },
   {
-    path: '/login',
-    component: () => import("@/pages/auth/TheLoginView.vue")
+    path: '/processing/:uid',
+    component: () => import('@/pages/ProcessingView.vue'),
+    meta: {
+      layout: MainLayout
+    }
   }
 ];
