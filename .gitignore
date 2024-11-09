@@ -5,3 +5,4 @@ node_modules
 bin
 dist
 /app/winapp/kizessleep/kizessleep/obj/
+/app/service/uploads/
