@@ -6,26 +6,29 @@
       accept=".edf"
       response-type="json"
       @finish="handleFinish"
+      @before-upload="handleBeforeUpload"
     >
-      <n-upload-dragger class="w-1/2 mx-auto">
-        <div style="margin-bottom: 12px">
-          <n-icon
-            size="48"
-            :depth="3"
+      <n-spin :show="isUploading">
+        <n-upload-dragger class="w-1/2 mx-auto">
+          <div style="margin-bottom: 12px">
+            <n-icon
+              :depth="3"
+              size="48"
+            >
+              <IcBaselineCloudUpload/>
+            </n-icon>
+          </div>
+          <n-text style="font-size: 16px">
+            Нажмите или перетащите сюда файл
+          </n-text>
+          <n-p
+            depth="3"
+            style="margin: 8px 0 0 0"
           >
-            <IcBaselineCloudUpload />
-          </n-icon>
-        </div>
-        <n-text style="font-size: 16px">
-          Нажмите или перетащите сюда файл
-        </n-text>
-        <n-p
-          depth="3"
-          style="margin: 8px 0 0 0"
-        >
-          Загрузите файл в формате EDF для анализа
-        </n-p>
-      </n-upload-dragger>
+            Загрузите файл в формате EDF для анализа
+          </n-p>
+        </n-upload-dragger>
+      </n-spin>
     </n-upload>
 
     <div class="mt-12 w-3/4 mx-auto">
@@ -58,10 +61,10 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted } from 'vue';
-import { BACKEND_URL } from '@/app/api/api';
+import {onMounted, ref} from 'vue';
+import {BACKEND_URL} from '@/app/api/api';
 import IcBaselineCloudUpload from '@shared/ui/icons/CloudUploadIcon.vue';
-import { useRouter } from 'vue-router';
+import {useRouter} from 'vue-router';
 
 interface Task {
   _id: string;
@@ -73,9 +76,16 @@ interface Task {
 
 const router = useRouter();
 const tasks = ref<Task[]>([]);
+const isUploading = ref(false);
 
 const handleFinish = (data: any) => {
+  isUploading.value = false;
   router.push(`/processing/${data.event.target.response.responseObject.uid}`);
+};
+
+const handleBeforeUpload = () => {
+  isUploading.value = true;
+  return true;
 };
 
 const fetchTasks = async () => {
