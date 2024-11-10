@@ -7,16 +7,16 @@ WORKDIR /usr/src/app
 COPY package*.json ./
 
 # Install app dependencies
-RUN npm ci
+RUN yarn install
 
 # Bundle app source
 COPY . .
 
 # Build the TypeScript files
-RUN npm run build
+RUN yarn build
 
 # Expose port 8080
-EXPOSE 8080
+EXPOSE 3000
 
 # Start the app
-CMD npm run start
+CMD ["npm", "run", "start"]
