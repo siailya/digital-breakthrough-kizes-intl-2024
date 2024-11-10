@@ -4,3 +4,4 @@ numpy
 catboost
 scipy
 python-dotenv
+gunicorn

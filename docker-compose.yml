@@ -41,5 +41,10 @@ services:
       - MONGODB=mongodb://root:sleepinsight@mongo:27017/
       - ML_SERVICE_URL=http://mlservice:5000
 
+  mlservice:
+    image: siailyadev/sleepinsight-mlservice:latest
+    ports:
+      - '5001:5000'
+
 volumes:
   mongo_data:
