@@ -43,6 +43,10 @@ services:
 
   mlservice:
     image: siailyadev/sleepinsight-mlservice:latest
+    deploy:
+      resources:
+        limits:
+          memory: 11.5G
     ports:
       - '5001:5000'
 
