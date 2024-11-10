@@ -44,6 +44,7 @@
               <n-descriptions-item label="Скачать Excel">
                 <n-button
                   :loading="isDownloading"
+                  :disabled="taskData.status !== 'completed'"
                   @click="handleExcelDownload"
                 >
                   Скачать Excel
@@ -161,14 +162,14 @@
 </template>
 
 <script lang="ts" setup>
-import { apiInstance } from '@/app/api/api';
-import { computed, h, onMounted, onUnmounted, ref, watch } from 'vue';
-import { useRoute } from 'vue-router';
+import {apiInstance} from '@/app/api/api';
+import {computed, h, onMounted, onUnmounted, ref, watch} from 'vue';
+import {useRoute} from 'vue-router';
 import EdfChart from '@/components/EdfChart.vue';
-import type { DataTableColumns } from 'naive-ui';
-import { NAlert, NButton, NDataTable, NInputNumber } from 'naive-ui';
-import { debounce } from 'lodash-es';
-import { Annotation } from '@components/model';
+import type {DataTableColumns} from 'naive-ui';
+import {NAlert, NButton, NDataTable, NInputNumber} from 'naive-ui';
+import {debounce} from 'lodash-es';
+import {Annotation} from '@components/model';
 
 interface Event {
   type: number;

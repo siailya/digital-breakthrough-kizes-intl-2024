@@ -4,8 +4,10 @@ import {ServiceResponse} from "@/common/models/serviceResponse";
 import {handleServiceResponse} from "@/common/utils/httpHandlers";
 import express, {type Request, type Response, type Router} from "express";
 import fs from "node:fs/promises";
+import fsSync from "node:fs";
 import {v4 as uuidv4} from "uuid";
-import fetch, {fileFromSync} from 'node-fetch';
+import axios from 'axios';
+import FormData from 'form-data';
 import {env} from "@/common/utils/envConfig";
 import {EDF} from "@/lib/edf";
 import ExcelJS from 'exceljs';
@@ -25,21 +27,18 @@ const ensureUploadDir = async () => {
 const processUploadedFile = async (processingTask: any) => {
     try {
         const formData = new FormData();
-        const fileStream = fileFromSync(processingTask.filePath);
+        const fileStream = fsSync.createReadStream(processingTask.filePath);
         formData.append('file', fileStream);
 
-        const res = await fetch(env.ML_SERVICE_URL + '/ml/catboost', {
-            method: "POST",
-            body: formData,
+        const response = await axios.post(env.ML_SERVICE_URL + '/ml/catboost', formData, {
+            headers: {
+                ...formData.getHeaders()
+            }
         });
 
-        if (!res.ok) {
-            throw new Error(`HTTP error! status: ${res.status}`);
-        }
-
-        // res = {events: [{type: 1, time: {start: 1, end: 2}, confidence: 0.5}]}
-        
-        const data = await res.json() as {events: {type: number, time: {start: number, end: number}, confidence: number}[]};
+        const data = response.data as {
+            events: { type: number, time: { start: number, end: number }, confidence: number }[]
+        };
         processingTask.events = data.events;
         processingTask.status = "completed";
         await processingTask.save();

@@ -216,7 +216,6 @@ export class EDF {
             if (this.has_annotations)
             {
                 var ann = arrayToAscii(buf, pos, this.annotation_bytes); pos+=this.annotation_bytes;
-                console.log("ANN",ann); 
             }
         }
         
