@@ -220,7 +220,7 @@ def assign_bins_by_majority_class_with_prob(
 
 
 def read_data(file_path: str):
-    return mne.io.read_raw_edf(file_path)
+    return mne.io.read_raw_edf(file_path, preload=True)
 
 
 def predict(
@@ -302,7 +302,7 @@ def inference_catboost(file_path):
     print("Process " + file_path)
     data = read_data(file_path)
     raw_data = data.get_data()
-
+    
     times, y_pred, y_pred_proba = predict(
         model,
         raw_data,
@@ -311,5 +311,10 @@ def inference_catboost(file_path):
         time_shift=2,
         bin_time=1
     )
-
+    
+    # Clean up large data objects
+    data.close()
+    del data
+    del raw_data
+    
     return times, y_pred, y_pred_proba

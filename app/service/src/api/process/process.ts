@@ -147,6 +147,11 @@ processingRouter.get("/export/:uid", async (req: Request, res: Response) => {
             return handleServiceResponse(serviceResponse, res);
         }
 
+        if (task.status === 'failed') {
+            const serviceResponse = ServiceResponse.failure("Невозможно экспортировать данные: задача завершилась с ошибкой", null, 422);
+            return handleServiceResponse(serviceResponse, res);
+        }
+
         if (!task.events || task.events.length === 0) {
             const serviceResponse = ServiceResponse.failure("Нет событий для экспорта", null, 404);
             return handleServiceResponse(serviceResponse, res);
