@@ -42,7 +42,10 @@
                 }}
               </n-descriptions-item>
               <n-descriptions-item label="Скачать Excel">
-                <n-button>
+                <n-button
+                  :loading="isDownloading"
+                  @click="handleExcelDownload"
+                >
                   Скачать Excel
                 </n-button>
               </n-descriptions-item>
@@ -159,13 +162,13 @@
 
 <script lang="ts" setup>
 import { apiInstance } from '@/app/api/api';
-import { onMounted, onUnmounted, ref, computed, h, watch } from 'vue';
+import { computed, h, onMounted, onUnmounted, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import EdfChart from '@/components/EdfChart.vue';
-import { NInputNumber, NAlert, NDataTable, NButton } from 'naive-ui';
+import type { DataTableColumns } from 'naive-ui';
+import { NAlert, NButton, NDataTable, NInputNumber } from 'naive-ui';
 import { debounce } from 'lodash-es';
 import { Annotation } from '@components/model';
-import type { DataTableColumns } from 'naive-ui';
 
 interface Event {
   type: number;
@@ -233,7 +236,7 @@ const abortController = ref<AbortController | null>(null);
 
 const handleTimeRangeChange = debounce(async () => {
   rangeError.value = null;
-  
+
   if (timeStart.value === null || timeEnd.value === null) {
     return;
   }
@@ -460,4 +463,30 @@ watch([timeStart, timeEnd], ([newStart, newEnd]) => {
     mainChartRef.value.zoomTo(newStart, newEnd);
   }
 });
+
+const isDownloading = ref(false);
+
+const handleExcelDownload = async () => {
+  if (!taskData.value?.uid) return;
+
+  isDownloading.value = true;
+  try {
+    const response = await apiInstance.get(`/processing/export/${taskData.value.uid}`, {
+      responseType: 'blob',
+    });
+
+    const url = window.URL.createObjectURL(new Blob([response.data]));
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', `${taskData.value.filename}_analysis.xlsx`);
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    window.URL.revokeObjectURL(url);
+  } catch (err) {
+    console.error('Failed to download Excel file:', err);
+  } finally {
+    isDownloading.value = false;
+  }
+};
 </script>
