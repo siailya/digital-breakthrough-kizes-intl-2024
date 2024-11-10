@@ -84,7 +84,7 @@
             this.txtServerUrl.Name = "txtServerUrl";
             this.txtServerUrl.Size = new System.Drawing.Size(379, 20);
             this.txtServerUrl.TabIndex = 3;
-            this.txtServerUrl.Text = "http://localhost:8080/upload";
+            this.txtServerUrl.Text = "https://sleep.flint3s.ru/api/processing/upload";
             // 
             // Form1
             // 

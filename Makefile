@@ -1,4 +1,4 @@
-.PHONY: build-service build-mlservice build-all
+.PHONY: build-service build-mlservice build-frontend build-all
 
 # Сборка образа service
 build-service:
@@ -8,5 +8,9 @@ build-service:
 build-mlservice:
 	cd ./mlservice && docker build -t siailyadev/sleepinsight-mlservice:latest .
 
+# Сборка образа frontend
+build-frontend:
+	cd ./app/web && docker build -t siailyadev/sleepinsight-frontend:latest .
+
 # Сборка всех образов
-build-all: build-service build-mlservice
+build-all: build-service build-mlservice build-frontend

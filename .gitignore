@@ -6,3 +6,4 @@ bin
 dist
 /app/winapp/kizessleep/kizessleep/obj/
 /app/service/uploads/
+!/app/winapp/release/kizessleep.exe

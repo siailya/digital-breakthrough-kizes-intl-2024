@@ -14,4 +14,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
 # Запускаем Gunicorn
-CMD ["gunicorn", "--bind", "0.0.0.0:5000", "wsgi:app", "--workers", "4", "--timeout", "1200"]
+CMD ["gunicorn", "--bind", "0.0.0.0:5000", "wsgi:app", "--workers", "1", "--timeout", "1200"]
