@@ -24,6 +24,11 @@ services:
       ME_CONFIG_MONGODB_URL: mongodb://root:sleepinsight@mongo:27017/
       ME_CONFIG_BASICAUTH: false
 
+  frontend:
+    image: siailyadev/sleepinsight-frontend:latest
+    ports:
+      - '5000:80'
+
 
 volumes:
   mongo_data:
