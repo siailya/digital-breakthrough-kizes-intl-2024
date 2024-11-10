@@ -31,8 +31,10 @@
     "helmet": "^8.0.0",
     "http-status-codes": "^2.3.0",
     "kafkajs": "^2.2.4",
+    "node-fetch": "^3.3.2",
     "pino": "^9.4.0",
     "pino-http": "^10.0.0",
+    "replace-in-file": "^8.2.0",
     "swagger-ui-express": "^5.0.0",
     "uuid": "^11.0.2",
     "zod": "^3.22.4"

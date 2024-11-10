@@ -47,7 +47,7 @@
             {{ new Date(task.date).toLocaleString() }}
           </div>
           <div class="mt-2">
-            <n-tag :type="task.status === 'completed' ? 'success' : 'warning'">
+            <n-tag :type="getStatusType(task.status)">
               {{ task.status }}
             </n-tag>
           </div>
@@ -87,6 +87,17 @@ const fetchTasks = async () => {
     }
   } catch (error) {
     console.error('Error fetching tasks:', error);
+  }
+};
+
+const getStatusType = (status: string) => {
+  switch (status) {
+  case 'completed':
+    return 'info';
+  case 'failed':
+    return 'error';
+  default:
+    return 'warning';
   }
 };
 

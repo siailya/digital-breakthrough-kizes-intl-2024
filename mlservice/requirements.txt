@@ -1,0 +1,6 @@
+flask
+mne
+numpy
+catboost
+scipy
+python-dotenv
