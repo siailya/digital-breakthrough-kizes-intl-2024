@@ -13,10 +13,5 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Копируем остальные файлы проекта
 COPY . .
 
-# Указываем порт, который будет использоваться приложением
-ARG PORT=5001
-ENV PORT=$PORT
-EXPOSE $PORT
-
 # Запускаем Gunicorn
-CMD ["gunicorn", "--bind", "0.0.0.0:${PORT}", "wsgi:app", "--workers", "4", "--timeout", "120"]
+CMD ["gunicorn", "--bind", "0.0.0.0:5000", "wsgi:app", "--workers", "4", "--timeout", "120"]

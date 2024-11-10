@@ -2,9 +2,8 @@ import mne
 import numpy as np
 import numpy.typing as npt
 
-from datetime import datetime
-from scipy.signal import stft
 from catboost import CatBoostClassifier
+from scipy.stats import skew, kurtosis
 
 
 def feature_data(raw_data: np.ndarray) -> np.ndarray:
@@ -13,9 +12,15 @@ def feature_data(raw_data: np.ndarray) -> np.ndarray:
     sigmas = np.std(raw_data, axis=-1)
     percentile95 = np.percentile(raw_data, q=0.95, axis=-1)
     percentile05 = np.percentile(raw_data, q=0.05, axis=-1)
+    percentile75 = np.percentile(raw_data, q=0.75, axis=-1)
+    percentile35 = np.percentile(raw_data, q=0.35, axis=-1)
+    cv = np.std(raw_data, ddof=1, axis=1) / np.mean(raw_data, axis=1)
+    sk = skew(raw_data, axis=1, bias=True)
+    kurt = kurtosis(raw_data, axis=1, bias=True)
     fourie_means = np.array([extract_fft_features_fixed_freqs(raw_line)[0].flatten() for raw_line in raw_data])
     return np.concatenate(
-        (means, median, sigmas, percentile95, percentile05, fourie_means), axis=-1
+        (means, median, sigmas, percentile95, percentile05, percentile75, percentile35, cv, sk, kurt, fourie_means),
+        axis=-1
     )
 
 
@@ -232,7 +237,6 @@ def predict(
     n_bin_samples = int(sample_ratio * time_shift)
     max_sample = int(sample_ratio * max_time)
 
-
     segments, samples = segment_time_series(raw_data, sample_interval, sample_shift)
     print("Segmented")
     X = feature_data(segments)
@@ -251,10 +255,9 @@ def predict(
     )
     print("Assigned bins")
 
-
     samples, y_pred, y_pred_proba = merge_intervals_by_class(samples, y_pred, y_pred_proba)
     print("Merged intervals")
-    
+
     times, y_pred_without_0, y_pred_proba_without_0 = (samples / sample_ratio).astype(int)[y_pred != 0], y_pred[
         y_pred != 0], y_pred_proba[y_pred != 0]
 
@@ -291,7 +294,7 @@ def predict_by_each_bin(
     return (samples / sample_ratio), y_pred, y_pred_proba
 
 
-model = CatBoostClassifier().load_model("inference/models/catboost_10k_25hz.cbm")
+model = CatBoostClassifier().load_model("inference/models/catboost_6k_25hz_pseudo.cbm")
 print("Catboost model loaded")
 
 
